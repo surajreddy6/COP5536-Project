@@ -5,8 +5,6 @@ import java.util.HashMap;
 public class FibonacciHeap {
     // The node that contains the max key
     private Node max;
-    // The tree that contains the max key
-    private Tree maxTree;
     // Hash table with key-keyword and value-node of the keyword
     private HashMap<String, Node> hashTable = new HashMap<String, Node>();
 
@@ -18,39 +16,33 @@ public class FibonacciHeap {
         } else {
             // Create new node
             Node newNode =  new Node(frequency);
-            // Create a new tree with a single node
-            Tree newTree = new Tree(newNode);
             // insert pointer to the new node in the hash table
             hashTable.put(keyword, newNode);
             // insert the new tree into the fibonacci heap
-            addTree(newTree);
+            addNode(newNode);
         }
     }
 
-    public void addTree(Tree tree) {
+    public void addNode(Node node) {
         /* if the heap is empty add it directly else
-           add it next to the maxTree
+           add it next to the max node
            */
-        if(maxTree == null) {
-            tree.setLeftTree(tree);
-            tree.setRightTree(tree);
-            maxTree = tree;
-            max = tree.getRoot();
+        if(max == null) {
+            node.setLeftSibling(node);
+            node.setRightSibling(node);
+            max = node;
         } else {
-            // set maxTree as the left tree of the new tree
-            tree.setLeftTree(maxTree);
-            // set the right tree of maxTree as
-            tree.setRightTree(maxTree.getRightTree());
-            // set the left tree of the right tree of maxTree as tree
-            maxTree.getRightTree().setLeftTree(tree);
-            // set right tree of maxTree as tree
-            maxTree.setRightTree(tree);
-            /* if the count at root at root of new tree is greater than
-               the max, set it as the new max
-               */
-            if(maxTree.getRoot().getCount() < tree.getRoot().getCount()) {
-                max = tree.getRoot();
-                maxTree = tree;
+            // set max as the left sibling of node
+            node.setLeftSibling(max);
+            // set the right sibling of max as right sibling of mode
+            node.setRightSibling(max.getRightSibling());
+            // set node as the left sibling of the right sibling of max
+            max.getRightSibling().setLeftSibling(node);
+            // set node as right sibling of max
+            max.setRightSibling(node);
+            // if the incoming node's count is greater set is as max
+            if(max.getCount() < node.getCount()) {
+                max = node;
             }
         }
     }
@@ -60,7 +52,15 @@ public class FibonacciHeap {
         if(node.getParent() == null) {
             node.setCount(node.getCount() + frequency);
             if(node.getCount() > max.getCount()) {
+                max = node;
+            }
+        } else {
+            // if count of node becomes greater than the parent remove the
+            // subtree rooted and node and re-insert into the heap
+            if(node.getCount() + frequency > node.getParent().getCount()) {
 
+            } else {
+                node.setCount(node.getCount() + frequency);
             }
         }
     }
