@@ -3,7 +3,8 @@ package fibheap;
 public class Node {
     // Degree of the node
     private int degree;
-    // Data field of the node. Count is the frequency of the keyword
+    // Data fields of the node: keyword and count
+    private String keyword;
     private int count;
     // Child of the node
     private Node child;
@@ -16,7 +17,8 @@ public class Node {
     // ChildCut field of the node
     private boolean childCut;
 
-    public Node(int count) {
+    public Node(String keyword, int count) {
+        this.keyword = keyword;
         this.count = count;
     }
 
@@ -74,5 +76,13 @@ public class Node {
 
     public void setChildCut(boolean childCut) {
         this.childCut = childCut;
+    }
+
+    public String getKeyword() {
+        return keyword;
+    }
+
+    public void setKeyword(String keyword) {
+        this.keyword = keyword;
     }
 }

@@ -8,6 +8,12 @@ public class FibonacciHeap {
     // Hash table with key -> keyword and value -> node of the keyword
     private HashMap<String, Node> hashTable = new HashMap<String, Node>();
 
+    // test function
+    public void getMax() {
+        System.out.println(max.getKeyword());
+        System.out.println(max.getCount());
+    }
+
     public void insert(String keyword, int frequency) {
         // check if the keyword already exists
         if (hashTable.containsKey(keyword)) {
@@ -15,7 +21,7 @@ public class FibonacciHeap {
             increaseKey(hashTable.get(keyword), frequency);
         } else {
             // Create new node
-            Node newNode =  new Node(frequency);
+            Node newNode =  new Node(keyword, frequency);
             // insert pointer to the new node in the hash table
             hashTable.put(keyword, newNode);
             // insert the new tree into the fibonacci heap
@@ -23,7 +29,36 @@ public class FibonacciHeap {
         }
     }
 
-    public void addNode(Node node) {
+    public void increaseKey(Node node, int frequency) {
+        // update count of node
+        node.setCount(node.getCount() + frequency);
+        // if the node is a root node check with max
+        if(node.getParent() == null) {
+            if(node.getCount() > max.getCount()) {
+                max = node;
+            }
+        } else {
+            // if count of node becomes greater than the parent remove the
+            // node (and it's subtree) and re-insert into the heap
+            if(node.getCount() > node.getParent().getCount()) {
+                removeAndReinsertNode(node);
+            }
+        }
+    }
+
+    public Node removeMax() {
+        // if heap is empty return null
+        if(max == null)
+            return null;
+
+        return null;
+    }
+
+    private void meld() {
+
+    }
+
+    private void addNode(Node node) {
         /* if the heap is empty add it directly else
            add it next to the max node
            */
@@ -49,29 +84,11 @@ public class FibonacciHeap {
         }
     }
 
-    public void increaseKey(Node node, int frequency) {
-        // update count of node
-        node.setCount(node.getCount() + frequency);
-        // if the node is a root node check with max
-        if(node.getParent() == null) {
-            if(node.getCount() > max.getCount()) {
-                max = node;
-            }
-        } else {
-            // if count of node becomes greater than the parent remove the
-            // node (and it's subtree) and re-insert into the heap
-            if(node.getCount() > node.getParent().getCount()) {
-                removeAndReinsertNode(node);
-            }
-        }
-    }
-
-    // Never called on a root node. Always called on a node with a parent
-    public void removeAndReinsertNode(Node node) {
-        // parent of the node
-        Node parent = node.getParent();
+    private void removeNode(Node node) {
         // set the child pointer of node's parent as nil
-        parent.setChild(null);
+        if(node.getParent() != null) {
+            node.getParent().setChild(null);
+        }
         // set the parent pointer of the node as nil
         node.setParent(null);
         // if the node has siblings update their pointers before removing the node
@@ -84,6 +101,14 @@ public class FibonacciHeap {
         node.setLeftSibling(node);
         node.setRightSibling(node);
         node.setChildCut(false);
+    }
+
+    // Never called on a root node. Always called on a node with a parent
+    private void removeAndReinsertNode(Node node) {
+        // parent of the node
+        Node parent = node.getParent();
+        // remove the node (and its's subtree) from the heap
+        removeNode(node);
         // re-insert node (and its's subtree) into the heap
         addNode(node);
         // Check to perform cascading cut only if the node's parent is not a root

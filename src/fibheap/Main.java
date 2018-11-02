@@ -26,6 +26,7 @@ public class Main {
                 int n = Integer.parseInt(input);
             }
         }
+        fibHeap.getMax();
     }
 
     private static List<String> readInputFile(String inputFileName) {
