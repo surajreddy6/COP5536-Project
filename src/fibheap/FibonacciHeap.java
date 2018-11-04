@@ -5,10 +5,14 @@ import java.util.HashMap;
 public class FibonacciHeap {
     // The node that contains the max key
     private Node max;
-    // The tree that contains the max key
-    private Tree maxTree;
-    // Hash table with key-keyword and value-node of the keyword
+    // Hash table with key -> keyword and value -> node of the keyword
     private HashMap<String, Node> hashTable = new HashMap<String, Node>();
+
+    // test function
+    public void getMax() {
+        System.out.println(max.getKeyword());
+        System.out.println(max.getCount());
+    }
 
     public void insert(String keyword, int frequency) {
         // check if the keyword already exists
@@ -17,50 +21,204 @@ public class FibonacciHeap {
             increaseKey(hashTable.get(keyword), frequency);
         } else {
             // Create new node
-            Node newNode =  new Node(frequency);
-            // Create a new tree with a single node
-            Tree newTree = new Tree(newNode);
-            // insert pointer to the new node in the hash table
-            hashTable.put(keyword, newNode);
+            Node newNode =  new Node(keyword, frequency);
             // insert the new tree into the fibonacci heap
-            addTree(newTree);
-        }
-    }
-
-    public void addTree(Tree tree) {
-        /* if the heap is empty add it directly else
-           add it next to the maxTree
-           */
-        if(maxTree == null) {
-            tree.setLeftTree(tree);
-            tree.setRightTree(tree);
-            maxTree = tree;
-            max = tree.getRoot();
-        } else {
-            // set maxTree as the left tree of the new tree
-            tree.setLeftTree(maxTree);
-            // set the right tree of maxTree as
-            tree.setRightTree(maxTree.getRightTree());
-            // set the left tree of the right tree of maxTree as tree
-            maxTree.getRightTree().setLeftTree(tree);
-            // set right tree of maxTree as tree
-            maxTree.setRightTree(tree);
-            /* if the count at root at root of new tree is greater than
-               the max, set it as the new max
-               */
-            if(maxTree.getRoot().getCount() < tree.getRoot().getCount()) {
-                max = tree.getRoot();
-                maxTree = tree;
-            }
+            addNode(newNode);
         }
     }
 
     public void increaseKey(Node node, int frequency) {
-        // if the node is a root node just increase the count and check with max
+        // update count of node
+        node.setCount(node.getCount() + frequency);
+        // if the node is a root node check with max
         if(node.getParent() == null) {
-            node.setCount(node.getCount() + frequency);
             if(node.getCount() > max.getCount()) {
+                max = node;
+            }
+        } else {
+            // if count of node becomes greater than the parent remove the
+            // node (and it's subtree) and re-insert into the heap
+            if(node.getCount() > node.getParent().getCount()) {
+                removeAndReinsertNode(node);
+            }
+        }
+    }
 
+    public Node removeMax() {
+        // if heap is empty return null
+        if(max == null)
+            return null;
+
+        // temporary variable to store max
+        Node temp = max;
+
+        // if max node has no children, find the second max node and make it the max node removing the old max node
+        // if the node has children do the same but also remove it's children and re-insert into the heap
+        if(max.getChild() == null) {
+            // if max is the only node in the heap
+            if(max.getRightSibling() == max && max.getLeftSibling() == max) {
+                max = null;
+            } else {
+                max = getSecondMax();
+            }
+        } else {
+            Node maxChild = max.getChild();
+            // second max is guaranteed to be at the same level as max
+            max = getSecondMax();
+            // remove children of max and re-insert them into the heap
+            Node i = maxChild;
+            do {
+                Node k = i.getRightSibling();
+                removeNode(i);
+                addNode(i);
+                i = k;
+            } while(i != maxChild);
+        }
+        // remove the old max node from the fib heap
+        removeNode(temp);
+        // perform a meld operation every time removeMax is called
+        meld();
+        return temp;
+    }
+
+    // Needs to be recursive
+    private void meld() {
+        HashMap<Integer, Node> degreeTable = new HashMap<Integer, Node>();
+        // if there is only one subtree in the heap, no need to meld
+        // possibly not needed
+        if(max.getRightSibling() == max && max.getLeftSibling() == max)
+            return;
+        Node i = max;
+        do {
+            Node k = i.getRightSibling();
+            if(degreeTable.containsKey(i.getDegree())) {
+                Node existingTree = degreeTable.get(i.getDegree());
+                Node newTree;
+                if(i.getCount() > existingTree.getCount()) {
+                    newTree = makeChild(i, existingTree);
+                    removeNode(existingTree);
+                    hashTable.put(existingTree.getKeyword(), existingTree);
+                }
+                else {
+                    newTree = makeChild(existingTree, i);
+                    removeNode(i);
+                    hashTable.put(i.getKeyword(), i);
+                }
+                degreeTable.remove(i.getDegree());
+                // TODO: this is not correct. Check the table for existing tree of same degree
+                degreeTable.put(newTree.getDegree(), newTree);
+            } else {
+                degreeTable.put(i.getDegree(), i);
+            }
+            i = k;
+        } while (i != max);
+    }
+
+    private Node makeChild(Node parent, Node child) {
+        Node parentChild = parent.getChild();
+        // check if parent has children
+        if (parentChild == null) {
+            parent.setChild(child);
+        } else {
+            insertIntoList(parentChild, child);
+        }
+        // set the parent field of child node
+        child.setParent(parent);
+        // update the degree field of parent node
+        parent.setDegree(parent.getDegree() + 1);
+        return parent;
+    }
+
+    // function to find the second max node at the max node level
+    private Node getSecondMax() {
+        // if heap is empty return null
+        if(max == null)
+            return null;
+
+        // if there are no siblings at the level of max return null
+        if(max.getRightSibling() == max && max.getLeftSibling() == max)
+            return null;
+
+        Node i = max.getRightSibling();
+        Node secondMax = max.getRightSibling();
+        while (i != max) {
+            if(i.getCount() > secondMax.getCount())
+                secondMax = i;
+            i = i.getRightSibling();
+        }
+        return secondMax;
+    }
+
+    private void addNode(Node node) {
+        /* if the heap is empty add it directly else
+           add it next to the max node
+           */
+        if(max == null) {
+            node.setLeftSibling(node);
+            node.setRightSibling(node);
+            max = node;
+        } else {
+            insertIntoList(max, node);
+            // childCut is not defined for the root but set it to false
+            node.setChildCut(false);
+            // if the incoming node's count is greater set is as max
+            if(node.getCount() > max.getCount()) {
+                max = node;
+            }
+        }
+        // insert pointer to the new node in the hash table
+        hashTable.put(node.getKeyword(), node);
+    }
+
+    // function to insert a node into a doubly linked list of nodes
+    private void insertIntoList(Node head, Node node) {
+        // set head as the left sibling of node
+        node.setLeftSibling(head);
+        // set the right sibling of head as right sibling of mode
+        node.setRightSibling(head.getRightSibling());
+        // set node as the left sibling of the right sibling of head
+        head.getRightSibling().setLeftSibling(node);
+        // set node as right sibling of head
+        head.setRightSibling(node);
+    }
+
+    private void removeNode(Node node) {
+        // set the child pointer of node's parent as nil
+        if(node.getParent() != null) {
+            node.getParent().setChild(null);
+        }
+        // set the parent pointer of the node as nil
+        node.setParent(null);
+        // if the node has siblings update their pointers before removing the node
+        if (node.getLeftSibling() != node || node.getRightSibling() != node) {
+            Node leftSibling = node.getLeftSibling();
+            Node rightSibling = node.getRightSibling();
+            leftSibling.setRightSibling(rightSibling);
+            rightSibling.setLeftSibling(leftSibling);
+        }
+        node.setLeftSibling(node);
+        node.setRightSibling(node);
+        node.setChildCut(false);
+        // remove pointer to the node in the hash table
+        hashTable.remove(node.getKeyword());
+    }
+
+    // Never called on a root node. Always called on a node with a parent
+    private void removeAndReinsertNode(Node node) {
+        // parent of the node
+        Node parent = node.getParent();
+        // remove the node (and its's subtree) from the heap
+        removeNode(node);
+        // re-insert node (and its's subtree) into the heap
+        addNode(node);
+        // Check to perform cascading cut only if the node's parent is not a root
+        if(parent.getParent() != null) {
+            // if childCut if already true, remove and re-insert the parent into the heap
+            // else set childCut of parent to true
+            if(parent.isChildCut()) {
+                removeAndReinsertNode(parent);
+            } else {
+                parent.setChildCut(true);
             }
         }
     }
