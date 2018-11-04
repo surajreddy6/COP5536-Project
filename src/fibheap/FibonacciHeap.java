@@ -65,21 +65,14 @@ public class FibonacciHeap {
             Node maxChild = max.getChild();
             // second max is guaranteed to be at the same level as max
             max = getSecondMax();
-            // if max has only one child
-            if(maxChild.getLeftSibling() == maxChild && maxChild.getRightSibling() == maxChild) {
-                // remove and re-insert children into the heap
-                removeNode(maxChild);
-                addNode(maxChild);
-            } else {
-                Node i = maxChild;
-                do {
-                    Node k = i.getRightSibling();
-                    // remove and re-insert children into the heap
-                    removeNode(i);
-                    addNode(i);
-                    i = k;
-                } while(i != maxChild);
-            }
+            // remove children of max and re-insert them into the heap
+            Node i = maxChild;
+            do {
+                Node k = i.getRightSibling();
+                removeNode(i);
+                addNode(i);
+                i = k;
+            } while(i != maxChild);
         }
         // remove the old max node from the fib heap
         removeNode(temp);
