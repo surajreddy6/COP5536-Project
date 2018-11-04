@@ -2,7 +2,8 @@ package fibheap;
 
 public class Node {
     // Degree of the node
-    private int degree;
+    // Default set as 1
+    private int degree = 1;
     // Data fields of the node: keyword and count
     private String keyword;
     private int count;

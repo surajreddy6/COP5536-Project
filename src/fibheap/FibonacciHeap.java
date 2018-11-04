@@ -22,8 +22,6 @@ public class FibonacciHeap {
         } else {
             // Create new node
             Node newNode =  new Node(keyword, frequency);
-            // insert pointer to the new node in the hash table
-            hashTable.put(keyword, newNode);
             // insert the new tree into the fibonacci heap
             addNode(newNode);
         }
@@ -51,11 +49,67 @@ public class FibonacciHeap {
         if(max == null)
             return null;
 
-        return null;
+        // temporary variable to store max
+        Node temp = max;
+
+        // if max node has no children, find the second max node and make it the max node removing the old max node
+        // if the node has children do the same but also remove it's children and re-insert into the heap
+        if(max.getChild() == null) {
+            // if max is the only node in the heap
+            if(max.getRightSibling() == max && max.getLeftSibling() == max) {
+                max = null;
+            } else {
+                max = getSecondMax();
+            }
+        } else {
+            Node maxChild = max.getChild();
+            // second max is guaranteed to be at the same level as max
+            max = getSecondMax();
+            // if max has only one child
+            if(maxChild.getLeftSibling() == maxChild && maxChild.getRightSibling() == maxChild) {
+                // remove and re-insert children into the heap
+                removeNode(maxChild);
+                addNode(maxChild);
+            } else {
+                Node i = maxChild;
+                do {
+                    Node k = i.getRightSibling();
+                    // remove and re-insert children into the heap
+                    removeNode(i);
+                    addNode(i);
+                    i = k;
+                } while(i != maxChild);
+            }
+        }
+        // remove the old max node from the fib heap
+        removeNode(temp);
+        // perform a meld operation every time removeMax is called
+        meld();
+        return temp;
     }
 
     private void meld() {
+        
+    }
 
+    // function to find the second max node at the max node level
+    private Node getSecondMax() {
+        // if heap is empty return null
+        if(max == null)
+            return null;
+
+        // if there are no siblings at the level of max return null
+        if(max.getRightSibling() == max && max.getLeftSibling() == max)
+            return null;
+
+        Node i = max.getRightSibling();
+        Node secondMax = max.getRightSibling();
+        while (i != max) {
+            if(i.getCount() > secondMax.getCount())
+                secondMax = i;
+            i = i.getRightSibling();
+        }
+        return secondMax;
     }
 
     private void addNode(Node node) {
@@ -82,6 +136,8 @@ public class FibonacciHeap {
                 max = node;
             }
         }
+        // insert pointer to the new node in the hash table
+        hashTable.put(node.getKeyword(), node);
     }
 
     private void removeNode(Node node) {
@@ -101,6 +157,8 @@ public class FibonacciHeap {
         node.setLeftSibling(node);
         node.setRightSibling(node);
         node.setChildCut(false);
+        // remove pointer to the node in the hash table
+        hashTable.remove(node.getKeyword());
     }
 
     // Never called on a root node. Always called on a node with a parent
