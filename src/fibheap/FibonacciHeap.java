@@ -1,6 +1,7 @@
 package fibheap;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class FibonacciHeap {
     // The node that contains the max key
@@ -10,8 +11,14 @@ public class FibonacciHeap {
 
     // test function
     public void getMax() {
-        System.out.println(max.getKeyword());
-        System.out.println(max.getCount());
+        System.out.println(max.toString());
+    }
+
+    // test function
+    public void print() {
+        for(Map.Entry<String, Node> entry : hashTable.entrySet()) {
+            System.out.println(entry.getValue().toString());
+        }
     }
 
     public void insert(String keyword, int frequency) {
@@ -81,7 +88,6 @@ public class FibonacciHeap {
         return temp;
     }
 
-    // Needs to be recursive
     private void meld() {
         HashMap<Integer, Node> degreeTable = new HashMap<Integer, Node>();
         // if there is only one subtree in the heap, no need to meld
@@ -91,27 +97,40 @@ public class FibonacciHeap {
         Node i = max;
         do {
             Node k = i.getRightSibling();
+            // check if there is a tree with the same degree as i
             if(degreeTable.containsKey(i.getDegree())) {
+                // get the tree which has the same degree as i
                 Node existingTree = degreeTable.get(i.getDegree());
-                Node newTree;
-                if(i.getCount() > existingTree.getCount()) {
-                    newTree = makeChild(i, existingTree);
-                    removeNode(existingTree);
-                    hashTable.put(existingTree.getKeyword(), existingTree);
-                }
-                else {
-                    newTree = makeChild(existingTree, i);
-                    removeNode(i);
-                    hashTable.put(i.getKeyword(), i);
-                }
+                // remove the tree from degree table
                 degreeTable.remove(i.getDegree());
-                // TODO: this is not correct. Check the table for existing tree of same degree
-                degreeTable.put(newTree.getDegree(), newTree);
+                // combine trees of the same degree
+                combineTrees(degreeTable, i, existingTree);
             } else {
                 degreeTable.put(i.getDegree(), i);
             }
             i = k;
         } while (i != max);
+    }
+
+    // recursively combines trees of the same degree
+    private void combineTrees(HashMap<Integer, Node> degreeTable, Node a, Node b) {
+        Node newTree;
+        if(a.getCount() > b.getCount()) {
+            newTree = makeChild(a, b);
+        }
+        else {
+            newTree = makeChild(b, a);
+        }
+        Node existingTree = null;
+        if(degreeTable.containsKey(newTree.getDegree())) {
+            existingTree = degreeTable.get(newTree.getDegree());
+            degreeTable.remove(existingTree.getDegree());
+            combineTrees(degreeTable, existingTree, newTree);
+        }
+        else {
+            degreeTable.put(newTree.getDegree(), newTree);
+            return;
+        }
     }
 
     private Node makeChild(Node parent, Node child) {

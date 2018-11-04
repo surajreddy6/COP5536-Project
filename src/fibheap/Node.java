@@ -2,8 +2,7 @@ package fibheap;
 
 public class Node {
     // Degree of the node
-    // Default set as 1
-    private int degree = 1;
+    private int degree;
     // Data fields of the node: keyword and count
     private String keyword;
     private int count;
@@ -85,5 +84,36 @@ public class Node {
 
     public void setKeyword(String keyword) {
         this.keyword = keyword;
+    }
+
+    @Override
+    public String toString() {
+        String childKeyword, parentKeyword, leftSiblingKeyword, rightSiblingKeyword;
+        if(parent == null)
+            parentKeyword = "None";
+        else parentKeyword = parent.getKeyword();
+
+        if(child == null)
+            childKeyword = "None";
+        else childKeyword = child.getKeyword();
+
+        if(leftSibling == null)
+            leftSiblingKeyword = "None";
+        else leftSiblingKeyword = leftSibling.getKeyword();
+
+        if(rightSibling == null)
+            rightSiblingKeyword = "None";
+        else rightSiblingKeyword = rightSibling.getKeyword();
+
+        return "Node{" + '\n' +
+                "degree=" + degree + '\n' +
+                ", keyword='" + keyword + '\'' + '\n' +
+                ", count=" + count + '\n' +
+                ", child=" + childKeyword + '\n' +
+                ", leftSibling=" + leftSiblingKeyword + '\n' +
+                ", rightSibling=" + rightSiblingKeyword + '\n' +
+                ", parent=" + parentKeyword + '\n' +
+                ", childCut=" + childCut + '\n' +
+                '}' + '\n';
     }
 }

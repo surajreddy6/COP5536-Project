@@ -24,9 +24,15 @@ public class Main {
                 fibHeap.insert(keyword, frequency);
             } else {
                 int n = Integer.parseInt(input);
+//                for (int i = 0; i < n ; i++) {
+//                    System.out.println("loop2");
+//                    Node node = fibHeap.removeMax();
+//                    System.out.println(node.getKeyword());
+//                    System.out.println(node.getCount());
+//                }
             }
         }
-        fibHeap.getMax();
+        fibHeap.print();
     }
 
     private static List<String> readInputFile(String inputFileName) {
