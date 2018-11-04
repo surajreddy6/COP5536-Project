@@ -67,11 +67,14 @@ public class FibonacciHeap {
                 max = null;
             } else {
                 max = getSecondMax();
+                System.out.println("New max");
+                System.out.println(max.toString());
             }
         } else {
             Node maxChild = max.getChild();
-            // second max is guaranteed to be at the same level as max
             max = getSecondMax();
+            System.out.println("New max");
+            System.out.println(max.toString());
             // remove children of max and re-insert them into the heap
             Node i = maxChild;
             do {
@@ -95,17 +98,21 @@ public class FibonacciHeap {
         if(max.getRightSibling() == max && max.getLeftSibling() == max)
             return;
         Node i = max;
+        System.out.println("melding...");
         do {
             Node k = i.getRightSibling();
+            System.out.println("Current node in meld: " + i.getKeyword());
             // check if there is a tree with the same degree as i
             if(degreeTable.containsKey(i.getDegree())) {
                 // get the tree which has the same degree as i
                 Node existingTree = degreeTable.get(i.getDegree());
+                System.out.println("Same degree found with key: " + existingTree.getKeyword());
                 // remove the tree from degree table
                 degreeTable.remove(i.getDegree());
                 // combine trees of the same degree
                 combineTrees(degreeTable, i, existingTree);
             } else {
+                System.out.println("Putting node in degree table. keyword: " + i.getKeyword());
                 degreeTable.put(i.getDegree(), i);
             }
             i = k;
@@ -114,6 +121,7 @@ public class FibonacciHeap {
 
     // recursively combines trees of the same degree
     private void combineTrees(HashMap<Integer, Node> degreeTable, Node a, Node b) {
+        System.out.println("Combining trees with keywords: " + a.getKeyword() + " and " + b.getKeyword());
         Node newTree;
         if(a.getCount() > b.getCount()) {
             newTree = makeChild(a, b);
@@ -124,6 +132,7 @@ public class FibonacciHeap {
         Node existingTree = null;
         if(degreeTable.containsKey(newTree.getDegree())) {
             existingTree = degreeTable.get(newTree.getDegree());
+            System.out.println("Same degree found with key(in combine): " + existingTree.getKeyword());
             degreeTable.remove(existingTree.getDegree());
             combineTrees(degreeTable, existingTree, newTree);
         }
@@ -134,7 +143,13 @@ public class FibonacciHeap {
     }
 
     private Node makeChild(Node parent, Node child) {
+        System.out.println("making " + child.getKeyword() + " as child of " + parent.getKeyword());
         Node parentChild = parent.getChild();
+        // remove the child (and it's subtree) from the heap first
+        System.out.println("removing " + child.getKeyword() + " from heap");
+        removeNode(child);
+        // add back only the reference to the child node
+        hashTable.put(child.getKeyword(), child);
         // check if parent has children
         if (parentChild == null) {
             parent.setChild(child);
@@ -148,23 +163,40 @@ public class FibonacciHeap {
         return parent;
     }
 
-    // function to find the second max node at the max node level
+    // function to find the second max node in the heap
     private Node getSecondMax() {
         // if heap is empty return null
         if(max == null)
             return null;
 
-        // if there are no siblings at the level of max return null
-        if(max.getRightSibling() == max && max.getLeftSibling() == max)
-            return null;
+        Node i;
+        Node secondMax;
 
-        Node i = max.getRightSibling();
-        Node secondMax = max.getRightSibling();
-        while (i != max) {
-            if(i.getCount() > secondMax.getCount())
-                secondMax = i;
-            i = i.getRightSibling();
+        // if there are no siblings at the level of max search it's children
+        if(max.getRightSibling() == max && max.getLeftSibling() == max) {
+            Node child = max.getChild();
+            // if max is the only node in the heap return null
+            if(child == null) {
+                return null;
+            }
+            i = child;
+            secondMax = child;
+            do {
+                if(i.getCount() > secondMax.getCount())
+                    secondMax = i;
+                i = i.getRightSibling();
+            } while (i != child);
+            return secondMax;
+        } else {
+            i = max.getRightSibling();
+            secondMax = max.getRightSibling();
+            while (i != max) {
+                if(i.getCount() > secondMax.getCount())
+                    secondMax = i;
+                i = i.getRightSibling();
+            }
         }
+
         return secondMax;
     }
 
@@ -210,6 +242,7 @@ public class FibonacciHeap {
         node.setParent(null);
         // if the node has siblings update their pointers before removing the node
         if (node.getLeftSibling() != node || node.getRightSibling() != node) {
+            System.out.println("updating sibling pointers of " + node.getKeyword());
             Node leftSibling = node.getLeftSibling();
             Node rightSibling = node.getRightSibling();
             leftSibling.setRightSibling(rightSibling);
