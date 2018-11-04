@@ -81,8 +81,52 @@ public class FibonacciHeap {
         return temp;
     }
 
+    // Needs to be recursive
     private void meld() {
-        
+        HashMap<Integer, Node> degreeTable = new HashMap<Integer, Node>();
+        // if there is only one subtree in the heap, no need to meld
+        // possibly not needed
+        if(max.getRightSibling() == max && max.getLeftSibling() == max)
+            return;
+        Node i = max;
+        do {
+            Node k = i.getRightSibling();
+            if(degreeTable.containsKey(i.getDegree())) {
+                Node existingTree = degreeTable.get(i.getDegree());
+                Node newTree;
+                if(i.getCount() > existingTree.getCount()) {
+                    newTree = makeChild(i, existingTree);
+                    removeNode(existingTree);
+                    hashTable.put(existingTree.getKeyword(), existingTree);
+                }
+                else {
+                    newTree = makeChild(existingTree, i);
+                    removeNode(i);
+                    hashTable.put(i.getKeyword(), i);
+                }
+                degreeTable.remove(i.getDegree());
+                // TODO: this is not correct. Check the table for existing tree of same degree
+                degreeTable.put(newTree.getDegree(), newTree);
+            } else {
+                degreeTable.put(i.getDegree(), i);
+            }
+            i = k;
+        } while (i != max);
+    }
+
+    private Node makeChild(Node parent, Node child) {
+        Node parentChild = parent.getChild();
+        // check if parent has children
+        if (parentChild == null) {
+            parent.setChild(child);
+        } else {
+            insertIntoList(parentChild, child);
+        }
+        // set the parent field of child node
+        child.setParent(parent);
+        // update the degree field of parent node
+        parent.setDegree(parent.getDegree() + 1);
+        return parent;
     }
 
     // function to find the second max node at the max node level
@@ -114,14 +158,7 @@ public class FibonacciHeap {
             node.setRightSibling(node);
             max = node;
         } else {
-            // set max as the left sibling of node
-            node.setLeftSibling(max);
-            // set the right sibling of max as right sibling of mode
-            node.setRightSibling(max.getRightSibling());
-            // set node as the left sibling of the right sibling of max
-            max.getRightSibling().setLeftSibling(node);
-            // set node as right sibling of max
-            max.setRightSibling(node);
+            insertIntoList(max, node);
             // childCut is not defined for the root but set it to false
             node.setChildCut(false);
             // if the incoming node's count is greater set is as max
@@ -131,6 +168,18 @@ public class FibonacciHeap {
         }
         // insert pointer to the new node in the hash table
         hashTable.put(node.getKeyword(), node);
+    }
+
+    // function to insert a node into a doubly linked list of nodes
+    private void insertIntoList(Node head, Node node) {
+        // set head as the left sibling of node
+        node.setLeftSibling(head);
+        // set the right sibling of head as right sibling of mode
+        node.setRightSibling(head.getRightSibling());
+        // set node as the left sibling of the right sibling of head
+        head.getRightSibling().setLeftSibling(node);
+        // set node as right sibling of head
+        head.setRightSibling(node);
     }
 
     private void removeNode(Node node) {
