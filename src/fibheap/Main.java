@@ -26,11 +26,13 @@ public class Main {
                 List<Node> nodes = new ArrayList<Node>();
                 int n = Integer.parseInt(input);
                 for (int i = 0; i < n ; i++) {
+                    System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
                     Node node = fibHeap.removeMax();
                     nodes.add(node);
                     System.out.println(node.getKeyword());
                     System.out.println(node.getCount());
                     fibHeap.print();
+                    System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
                 }
                 for(Node node: nodes) {
                     fibHeap.insert(node.getKeyword(), node.getCount());

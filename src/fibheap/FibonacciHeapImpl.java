@@ -17,9 +17,13 @@ public class FibonacciHeapImpl implements FibonacciHeap{
     // test function
     public void print() {
         System.out.println("*****************************************************");
-        System.out.println("Max is " + max.getKeyword());
-        for(Map.Entry<String, Node> entry : hashTable.entrySet()) {
-            System.out.println(entry.getValue().toString());
+        if(max == null) {
+            System.out.println("Heap is empty!!!!!!!!!!!!!!!!!");
+        } else {
+            System.out.println("Max is " + max.getKeyword());
+            for (Map.Entry<String, Node> entry : hashTable.entrySet()) {
+                System.out.println(entry.getValue().toString());
+            }
         }
     }
 
@@ -69,7 +73,7 @@ public class FibonacciHeapImpl implements FibonacciHeap{
         // if max node has no children, find the second max node and make it the max node removing the old max node
         // if the node has children do the same but also remove it's children and re-insert into the heap
         if(max.getChild() == null) {
-            // check if max is the only node in the heap
+            // check if max is the only node in the heap i.e, there is only one element in the heap
             if(max.getRightSibling() == max && max.getLeftSibling() == max) {
                 max = null;
             } else {
@@ -89,6 +93,7 @@ public class FibonacciHeapImpl implements FibonacciHeap{
                 addNode(i);
                 i = k;
             } while(i != maxChild);
+            // call getSecondMax() only after adding the subtrees of max at the top level of the heap
             max = getSecondMax();
         }
         // remove the old max node from the fib heap
@@ -100,6 +105,11 @@ public class FibonacciHeapImpl implements FibonacciHeap{
 
     private void meld() {
         HashMap<Integer, Node> degreeTable = new HashMap<Integer, Node>();
+
+        // if heap is empty return null
+        if(max == null)
+            return;
+
         // if there is only one subtree in the heap, no need to meld
         // possibly not needed
         if(max.getRightSibling() == max && max.getLeftSibling() == max)
@@ -119,7 +129,7 @@ public class FibonacciHeapImpl implements FibonacciHeap{
                 // combine trees of the same degree
                 combineTrees(degreeTable, i, existingTree);
             } else {
-                System.out.println("Putting node in degree table. keyword: " + i.getKeyword());
+                System.out.println("Putting node " + i.getKeyword() + " in degree table");
                 degreeTable.put(i.getDegree(), i);
             }
             i = k;

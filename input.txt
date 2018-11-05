@@ -11,4 +11,4 @@ $news 2
 $facebook 12
 $youtube 11
 $amazon 6
-3
+7
