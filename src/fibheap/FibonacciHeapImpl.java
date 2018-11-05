@@ -30,7 +30,7 @@ public class FibonacciHeapImpl implements FibonacciHeap{
     /**
      * Inserts a keyword into the fibonacci heap.
      * @param keyword the keyword to be inserted
-     * @param frequency frequency of the keyword to be inserted
+     * @param frequency the frequency of the keyword to be inserted
      */
     @Override
     public void insert(String keyword, int frequency) {
@@ -154,8 +154,8 @@ public class FibonacciHeapImpl implements FibonacciHeap{
     }
 
     /**
-     * Utility function the recursively combines trees of the same degree in the fibonacci heap.
-     * @param degreeTable table(hash map) containing information about the degrees of already checked trees
+     * Utility function that recursively combines trees of the same degree in the fibonacci heap.
+     * @param degreeTable the table(hash map) containing information about the degrees of already checked trees
      * @param a one of the trees to be combined
      * @param b one of the trees to be combined
      */
@@ -181,9 +181,9 @@ public class FibonacciHeapImpl implements FibonacciHeap{
 
     /**
      * Utility function to make a tree the subtree of another tree.
-     * @param parent root of the tree to which the subtree is added as a child
-     * @param child root of the tree that becomes the child of another tree
-     * @return root of the parent tree
+     * @param parent the root of the tree to which the subtree is added as a child
+     * @param child the root of the tree that becomes the child of another tree
+     * @return the root of the parent tree
      */
     private Node makeChild(Node parent, Node child) {
         System.out.println("Making " + child.getKeyword() + " as child of " + parent.getKeyword());
