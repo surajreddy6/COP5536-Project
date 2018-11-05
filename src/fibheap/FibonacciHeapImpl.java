@@ -274,13 +274,15 @@ public class FibonacciHeapImpl implements FibonacciHeap{
         removeNode(node);
         // re-insert node (and its's subtree) into the heap
         addNode(node);
-        // Check to perform cascading cut only if the node's parent is not a root
+        // perform cascading cut only if the node's parent is not a root
         if(parent.getParent() != null) {
             // if childCut if already true, remove and re-insert the parent into the heap
             // else set childCut of parent to true
             if(parent.isChildCut()) {
+                System.out.println("Child cut field of parent(" + parent.getKeyword() + ") of node " + node.getKeyword() + " is true. Perform cascading cut");
                 removeAndReinsertNode(parent);
             } else {
+                System.out.println("Child cut field of parent(" + parent.getKeyword() + ") of node " + node.getKeyword() + " is false. Making it true");
                 parent.setChildCut(true);
             }
         }

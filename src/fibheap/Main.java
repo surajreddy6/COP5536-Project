@@ -29,8 +29,7 @@ public class Main {
                     System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
                     Node node = fibHeap.removeMax();
                     nodes.add(node);
-                    System.out.println(node.getKeyword());
-                    System.out.println(node.getCount());
+                    System.out.println("+++++++++++++++++++++" + "Keyword: " + node.getKeyword() + " Count: " + node.getCount());
                     fibHeap.print();
                     System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
                 }
