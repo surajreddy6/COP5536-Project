@@ -16,6 +16,8 @@ public class FibonacciHeapImpl implements FibonacciHeap{
 
     // test function
     public void print() {
+        System.out.println("*****************************************************");
+        System.out.println("Max is " + max.getKeyword());
         for(Map.Entry<String, Node> entry : hashTable.entrySet()) {
             System.out.println(entry.getValue().toString());
         }
@@ -62,6 +64,8 @@ public class FibonacciHeapImpl implements FibonacciHeap{
         // temporary variable to store max
         Node temp = max;
 
+        System.out.println("Removing max node " + max.getKeyword());
+
         // if max node has no children, find the second max node and make it the max node removing the old max node
         // if the node has children do the same but also remove it's children and re-insert into the heap
         if(max.getChild() == null) {
@@ -70,13 +74,12 @@ public class FibonacciHeapImpl implements FibonacciHeap{
                 max = null;
             } else {
                 max = getSecondMax();
-                System.out.println("New max");
+                System.out.println("New max is");
                 System.out.println(max.toString());
             }
         } else {
             Node maxChild = max.getChild();
-            max = getSecondMax();
-            System.out.println("New max");
+            System.out.println("New max is");
             System.out.println(max.toString());
             // remove children of max and re-insert them into the heap
             Node i = maxChild;
@@ -86,6 +89,7 @@ public class FibonacciHeapImpl implements FibonacciHeap{
                 addNode(i);
                 i = k;
             } while(i != maxChild);
+            max = getSecondMax();
         }
         // remove the old max node from the fib heap
         removeNode(temp);
@@ -101,7 +105,7 @@ public class FibonacciHeapImpl implements FibonacciHeap{
         if(max.getRightSibling() == max && max.getLeftSibling() == max)
             return;
         Node i = max;
-        System.out.println("melding...");
+        System.out.println("Melding...");
         do {
             Node k = i.getRightSibling();
             System.out.println("Current node in meld: " + i.getKeyword());
@@ -144,10 +148,10 @@ public class FibonacciHeapImpl implements FibonacciHeap{
     }
 
     private Node makeChild(Node parent, Node child) {
-        System.out.println("making " + child.getKeyword() + " as child of " + parent.getKeyword());
+        System.out.println("Making " + child.getKeyword() + " as child of " + parent.getKeyword());
         Node parentChild = parent.getChild();
         // remove the child (and it's subtree) from the heap first
-        System.out.println("removing " + child.getKeyword() + " from heap");
+        System.out.println("Removing " + child.getKeyword() + " from heap");
         removeNode(child);
         // add back only the reference to the child node
         hashTable.put(child.getKeyword(), child);
@@ -164,8 +168,8 @@ public class FibonacciHeapImpl implements FibonacciHeap{
         return parent;
     }
 
-    // function to find the second max node in the heap
-    // check the top level also one level below max for the secondMax
+    // since we are adding the subtrees of max to the top level before deleting max,
+    // secondMax is guaranteed to be at the top level only
     private Node getSecondMax() {
         // if heap is empty return null
         if(max == null)
@@ -175,10 +179,8 @@ public class FibonacciHeapImpl implements FibonacciHeap{
         Node i;
         // possible secondMax at the root level
         Node secondMax;
-        // possible secondMax one level below max
-        Node childSecondMax;
 
-        // search for possible secondMax at the max level first
+        // search for possible secondMax at the max level
         // check if max has siblings
         if(max.getRightSibling() == max && max.getLeftSibling() == max) {
             secondMax = null;
@@ -192,31 +194,11 @@ public class FibonacciHeapImpl implements FibonacciHeap{
             }
         }
 
-        // search for possible secondMax one level below max
-        Node maxChild = max.getChild();
-        // check if max has no children
-        if(maxChild == null) {
-            childSecondMax = null;
-        } else {
-            i = maxChild;
-            childSecondMax = maxChild;
-            do {
-                if(i.getCount() > childSecondMax.getCount())
-                    childSecondMax = i;
-                i = i.getRightSibling();
-            } while (i != maxChild);
-        }
-
-        if(secondMax == null) {
-            return childSecondMax;
-        } else if(childSecondMax == null) {
-            return secondMax;
-        } else {
-            return secondMax.getCount() > childSecondMax.getCount() ? secondMax : childSecondMax;
-        }
+        return secondMax;
     }
 
     private void addNode(Node node) {
+        System.out.println("Adding node " + node.getKeyword());
         /* if the heap is empty add it directly else
            add it next to the max node
            */
@@ -228,7 +210,7 @@ public class FibonacciHeapImpl implements FibonacciHeap{
             insertIntoList(max, node);
             // childCut is not defined for the root but set it to false
             node.setChildCut(false);
-            // if the incoming node's count is greater set is as max
+            // if the incoming node's count is greater set it as max
             if(node.getCount() > max.getCount()) {
                 max = node;
             }
@@ -250,7 +232,9 @@ public class FibonacciHeapImpl implements FibonacciHeap{
     }
 
     // TODO: Support arbitrary remove operation. ATM this function deletes the node and it's subtree too.
+    // TODO: use a flag to select if the entry from hashTable should also be deleted
     private void removeNode(Node node) {
+        System.out.println("Removing node " + node.getKeyword());
         // set the child pointer of node's parent as nil
         if(node.getParent() != null) {
             node.getParent().setChild(null);
@@ -259,7 +243,7 @@ public class FibonacciHeapImpl implements FibonacciHeap{
         node.setParent(null);
         // if the node has siblings update their pointers before removing the node
         if (node.getLeftSibling() != node || node.getRightSibling() != node) {
-            System.out.println("updating sibling pointers of " + node.getKeyword());
+            System.out.println("Updating sibling pointers of " + node.getKeyword());
             Node leftSibling = node.getLeftSibling();
             Node rightSibling = node.getRightSibling();
             leftSibling.setRightSibling(rightSibling);
