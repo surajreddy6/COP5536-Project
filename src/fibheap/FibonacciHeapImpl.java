@@ -27,6 +27,11 @@ public class FibonacciHeapImpl implements FibonacciHeap{
         }
     }
 
+    /**
+     * Inserts a keyword into the fibonacci heap.
+     * @param keyword the keyword to be inserted
+     * @param frequency frequency of the keyword to be inserted
+     */
     @Override
     public void insert(String keyword, int frequency) {
         // check if the keyword already exists
@@ -41,6 +46,11 @@ public class FibonacciHeapImpl implements FibonacciHeap{
         }
     }
 
+    /**
+     * Increases the frequency of an existing keyword in the fibonacci heap.
+     * @param node the corresponding node of the existing keyword
+     * @param frequency the amount by which to increase the frequency of the existing keyword
+     */
     @Override
     public void increaseKey(Node node, int frequency) {
         // update count of node
@@ -59,6 +69,10 @@ public class FibonacciHeapImpl implements FibonacciHeap{
         }
     }
 
+    /**
+     * Removes the keyword with maximum frequency from the fibonacci heap.
+     * @return the node corresponding to the keyword with the maximum frequency
+     */
     @Override
     public Node removeMax() {
         // if heap is empty return null
@@ -103,6 +117,9 @@ public class FibonacciHeapImpl implements FibonacciHeap{
         return temp;
     }
 
+    /**
+     * Melds trees of the same degree in the fibonacci heap.
+     */
     private void meld() {
         HashMap<Integer, Node> degreeTable = new HashMap<Integer, Node>();
 
@@ -136,7 +153,12 @@ public class FibonacciHeapImpl implements FibonacciHeap{
         } while (i != max);
     }
 
-    // recursively combines trees of the same degree
+    /**
+     * Utility function the recursively combines trees of the same degree in the fibonacci heap.
+     * @param degreeTable table(hash map) containing information about the degrees of already checked trees
+     * @param a one of the trees to be combined
+     * @param b one of the trees to be combined
+     */
     private void combineTrees(HashMap<Integer, Node> degreeTable, Node a, Node b) {
         System.out.println("Combining trees with keywords: " + a.getKeyword() + " and " + b.getKeyword());
         Node newTree;
@@ -157,6 +179,12 @@ public class FibonacciHeapImpl implements FibonacciHeap{
         }
     }
 
+    /**
+     * Utility function to make a tree the subtree of another tree.
+     * @param parent root of the tree to which the subtree is added as a child
+     * @param child root of the tree that becomes the child of another tree
+     * @return root of the parent tree
+     */
     private Node makeChild(Node parent, Node child) {
         System.out.println("Making " + child.getKeyword() + " as child of " + parent.getKeyword());
         Node parentChild = parent.getChild();
@@ -178,8 +206,12 @@ public class FibonacciHeapImpl implements FibonacciHeap{
         return parent;
     }
 
-    // since we are adding the subtrees of max to the top level before deleting max,
-    // secondMax is guaranteed to be at the top level only
+    /**
+     * Utility function to find the second maximum keyword in the fibonacci heap.
+     * Since we are adding the subtrees of max to the top level before deleting max,
+     * secondMax is guaranteed to be at the top level only.
+     * @return the node corresponding to the second maximum keyword in the fibonacci heap
+     */
     private Node getSecondMax() {
         // if heap is empty return null
         if(max == null)
@@ -207,6 +239,10 @@ public class FibonacciHeapImpl implements FibonacciHeap{
         return secondMax;
     }
 
+    /**
+     * Utility function to add a node (and it's subtree) at the top level in the fibonacci heap.
+     * @param node the root of the tree to be added in the fibonacci heap
+     */
     private void addNode(Node node) {
         System.out.println("Adding node " + node.getKeyword());
         /* if the heap is empty add it directly else
@@ -229,7 +265,11 @@ public class FibonacciHeapImpl implements FibonacciHeap{
         hashTable.put(node.getKeyword(), node);
     }
 
-    // function to insert a node into a doubly linked list of nodes
+    /**
+     * Utility function to insert a node into a doubly linked list of nodes
+     * @param head the head node of the doubly linked list of nodes
+     * @param node the node to be added into the linked list
+     */
     private void insertIntoList(Node head, Node node) {
         // set head as the left sibling of node
         node.setLeftSibling(head);
@@ -243,6 +283,11 @@ public class FibonacciHeapImpl implements FibonacciHeap{
 
     // TODO: Support arbitrary remove operation. ATM this function deletes the node and it's subtree too.
     // TODO: use a flag to select if the entry from hashTable should also be deleted
+    /**
+     * Removes a node (and it's subtree) from the fibonacci heap. Note that this function
+     * removes the entire subtree and not an individual node.
+     * @param node the root of the subtree to be removed from the fibonacci heap
+     */
     private void removeNode(Node node) {
         System.out.println("Removing node " + node.getKeyword());
         // set the child pointer of node's parent as nil
@@ -266,7 +311,11 @@ public class FibonacciHeapImpl implements FibonacciHeap{
         hashTable.remove(node.getKeyword());
     }
 
-    // Never called on a root node. Always called on a node with a parent
+    /**
+     * Removes and re-inserts a node (and it's subtree) into the heap, performing cascading cut
+     * if necessary. This function is never called on a root node, it's always called on a node with a parent
+     * @param node the root of the subtree to be removed and re-inserted into the fibonacci heap
+     */
     private void removeAndReinsertNode(Node node) {
         // parent of the node
         Node parent = node.getParent();

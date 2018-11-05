@@ -12,6 +12,7 @@ $facebook 12
 $youtube 11
 $amazon 6
 3
+$weather 100
 $facebook 12
 $amazon 2
 $stop 3
