@@ -11,7 +11,7 @@ public class Main {
         // List of input strings to be processed
         List<String> inputs = readInputFile(inputFileName);
         // Fibonacci Heap
-        FibonacciHeap fibHeap = new FibonacciHeap();
+        FibonacciHeap fibHeap = new FibonacciHeapImpl();
         // Process input strings
         for(String input : inputs) {
             // if input string starts with '$' process it else print the top n keywords
@@ -26,13 +26,11 @@ public class Main {
                 int n = Integer.parseInt(input);
                 for (int i = 0; i < n ; i++) {
                     Node node = fibHeap.removeMax();
-                    //fibHeap.print();
                     System.out.println(node.getKeyword());
                     System.out.println(node.getCount());
                 }
             }
         }
-        //fibHeap.print();
     }
 
     private static List<String> readInputFile(String inputFileName) {
