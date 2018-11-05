@@ -37,7 +37,7 @@ public class FibonacciHeap {
     public void increaseKey(Node node, int frequency) {
         // update count of node
         node.setCount(node.getCount() + frequency);
-        // if the node is a root node check with max
+        // if the node is a root node compare it with with max
         if(node.getParent() == null) {
             if(node.getCount() > max.getCount()) {
                 max = node;
@@ -62,7 +62,7 @@ public class FibonacciHeap {
         // if max node has no children, find the second max node and make it the max node removing the old max node
         // if the node has children do the same but also remove it's children and re-insert into the heap
         if(max.getChild() == null) {
-            // if max is the only node in the heap
+            // check if max is the only node in the heap
             if(max.getRightSibling() == max && max.getLeftSibling() == max) {
                 max = null;
             } else {
@@ -123,12 +123,9 @@ public class FibonacciHeap {
     private void combineTrees(HashMap<Integer, Node> degreeTable, Node a, Node b) {
         System.out.println("Combining trees with keywords: " + a.getKeyword() + " and " + b.getKeyword());
         Node newTree;
-        if(a.getCount() > b.getCount()) {
-            newTree = makeChild(a, b);
-        }
-        else {
-            newTree = makeChild(b, a);
-        }
+        // make the node with smaller count as the subtree of the other
+        newTree = a.getCount() > b.getCount() ?  makeChild(a, b) : makeChild(b, a);
+
         Node existingTree = null;
         // check if there is an existing tree with the same degree as newTree
         if(degreeTable.containsKey(newTree.getDegree())) {
@@ -206,7 +203,6 @@ public class FibonacciHeap {
                 i = i.getRightSibling();
             } while (i != maxChild);
         }
-
 
         if(secondMax == null) {
             return childSecondMax;
