@@ -130,6 +130,7 @@ public class FibonacciHeap {
             newTree = makeChild(b, a);
         }
         Node existingTree = null;
+        // check if there is an existing tree with the same degree as newTree
         if(degreeTable.containsKey(newTree.getDegree())) {
             existingTree = degreeTable.get(newTree.getDegree());
             System.out.println("Same degree found with key(in combine): " + existingTree.getKeyword());
@@ -164,29 +165,23 @@ public class FibonacciHeap {
     }
 
     // function to find the second max node in the heap
+    // check the top level also one level below max for the secondMax
     private Node getSecondMax() {
         // if heap is empty return null
         if(max == null)
             return null;
 
+        // iterator node
         Node i;
+        // possible secondMax at the root level
         Node secondMax;
+        // possible secondMax one level below max
+        Node childSecondMax;
 
-        // if there are no siblings at the level of max search it's children
+        // search for possible secondMax at the max level first
+        // check if max has siblings
         if(max.getRightSibling() == max && max.getLeftSibling() == max) {
-            Node child = max.getChild();
-            // if max is the only node in the heap return null
-            if(child == null) {
-                return null;
-            }
-            i = child;
-            secondMax = child;
-            do {
-                if(i.getCount() > secondMax.getCount())
-                    secondMax = i;
-                i = i.getRightSibling();
-            } while (i != child);
-            return secondMax;
+            secondMax = null;
         } else {
             i = max.getRightSibling();
             secondMax = max.getRightSibling();
@@ -197,7 +192,29 @@ public class FibonacciHeap {
             }
         }
 
-        return secondMax;
+        // search for possible secondMax one level below max
+        Node maxChild = max.getChild();
+        // check if max has no children
+        if(maxChild == null) {
+            childSecondMax = null;
+        } else {
+            i = maxChild;
+            childSecondMax = maxChild;
+            do {
+                if(i.getCount() > childSecondMax.getCount())
+                    childSecondMax = i;
+                i = i.getRightSibling();
+            } while (i != maxChild);
+        }
+
+
+        if(secondMax == null) {
+            return childSecondMax;
+        } else if(childSecondMax == null) {
+            return secondMax;
+        } else {
+            return secondMax.getCount() > childSecondMax.getCount() ? secondMax : childSecondMax;
+        }
     }
 
     private void addNode(Node node) {
