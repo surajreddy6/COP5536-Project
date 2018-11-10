@@ -19,4 +19,5 @@ classes: $(CLASSES:.java=.class)
 
 clean:
 	$(RM) *.class
+	rm -rf fibheap/
 
