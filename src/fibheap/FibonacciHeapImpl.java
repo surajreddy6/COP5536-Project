@@ -14,6 +14,11 @@ public class FibonacciHeapImpl implements FibonacciHeap{
         System.out.println(max.toString());
     }
 
+    public FibonacciHeapImpl(Node max, HashMap<String, Node> hashTable) {
+        this.max = max;
+        this.hashTable = hashTable;
+    }
+
     // test function
     public void print() {
         System.out.println("*****************************************************");
@@ -281,7 +286,6 @@ public class FibonacciHeapImpl implements FibonacciHeap{
         head.setRightSibling(node);
     }
 
-    // TODO: Support arbitrary remove operation. ATM this function deletes the node and it's subtree too.
     // TODO: use a flag to select if the entry from hashTable should also be deleted
     /**
      * Removes a node (and it's subtree) from the fibonacci heap. Note that this function
@@ -290,15 +294,22 @@ public class FibonacciHeapImpl implements FibonacciHeap{
      */
     private void removeNode(Node node) {
         System.out.println("Removing node " + node.getKeyword());
-        // set the child pointer of node's parent as nil
-        if(node.getParent() != null) {
-            node.getParent().setChild(null);
+        // parent of the node
+        Node parent = node.getParent();
+        // set the child pointer of node's parent as nil and update parent's degree
+        if(parent != null) {
+            parent.setChild(null);
+            parent.setDegree(parent.getDegree() - 1);
         }
         // set the parent pointer of the node as nil
         node.setParent(null);
         // if the node has siblings update their pointers before removing the node
         if (node.getLeftSibling() != node || node.getRightSibling() != node) {
             System.out.println("Updating sibling pointers of " + node.getKeyword());
+            // if the node has a parent then update it's child pointer
+            if(parent != null) {
+                parent.setChild(node.getLeftSibling());
+            }
             Node leftSibling = node.getLeftSibling();
             Node rightSibling = node.getRightSibling();
             leftSibling.setRightSibling(rightSibling);
@@ -325,7 +336,7 @@ public class FibonacciHeapImpl implements FibonacciHeap{
         addNode(node);
         // perform cascading cut only if the node's parent is not a root
         if(parent.getParent() != null) {
-            // if childCut if already true, remove and re-insert the parent into the heap
+            // if childCut is already true, remove and re-insert the parent into the heap
             // else set childCut of parent to true
             if(parent.isChildCut()) {
                 System.out.println("Child cut field of parent(" + parent.getKeyword() + ") of node " + node.getKeyword() + " is true. Perform cascading cut");

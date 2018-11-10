@@ -17,9 +17,22 @@ public class Node {
     // ChildCut field of the node
     private boolean childCut;
 
+    public Node(){}
+
     public Node(String keyword, int count) {
         this.keyword = keyword;
         this.count = count;
+    }
+
+    public Node(int degree, String keyword, int count, Node child, Node leftSibling, Node rightSibling, Node parent, boolean childCut) {
+        this.degree = degree;
+        this.keyword = keyword;
+        this.count = count;
+        this.child = child;
+        this.leftSibling = leftSibling;
+        this.rightSibling = rightSibling;
+        this.parent = parent;
+        this.childCut = childCut;
     }
 
     public int getDegree() {
