@@ -117,7 +117,7 @@ public class FibonacciHeapImpl implements FibonacciHeap{
             // call getSecondMax() only after adding the subtrees of max at the top level of the heap
             max = getSecondMax();
         }
-        // remove the old max node from the fib heap
+        // remove the old max node from the fibonacci heap
         removeNode(temp, true);
         // perform a meld operation every time removeMax is called
         meld();
