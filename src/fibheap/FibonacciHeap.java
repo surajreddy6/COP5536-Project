@@ -1,8 +1,9 @@
 package fibheap;
 
 public interface FibonacciHeap {
-    void insert(String keyword, int frequency);
-    void increaseKey(String keyword, int frequency);
+    Node insert(String keyword, int frequency);
+    Node increaseKey(String keyword, int frequency);
     Node removeMax();
+    Node getMax();
     public void print();
 }

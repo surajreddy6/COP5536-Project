@@ -9,11 +9,6 @@ public class FibonacciHeapImpl implements FibonacciHeap{
     // Hash table with key -> keyword and value -> node of the keyword
     private HashMap<String, Node> hashTable;
 
-    // test function
-    public void getMax() {
-        System.out.println(max.toString());
-    }
-
     public FibonacciHeapImpl(Node max, HashMap<String, Node> hashTable) {
         this.max = max;
         this.hashTable = hashTable;
@@ -40,34 +35,36 @@ public class FibonacciHeapImpl implements FibonacciHeap{
      * Inserts a keyword into the fibonacci heap.
      * @param keyword the keyword to be inserted
      * @param frequency the frequency of the keyword to be inserted
+     * @return the max node of the fibonacci heap
      */
     @Override
-    public void insert(String keyword, int frequency) {
+    public Node insert(String keyword, int frequency) {
         // check if the keyword already exists
         if (hashTable.containsKey(keyword)) {
             // increase the count of an already existing keyword
-            increaseKey(keyword, frequency);
+            return increaseKey(keyword, frequency);
         } else {
             // Create new node
             Node newNode =  new Node(keyword, frequency);
             // insert the new tree into the fibonacci heap
             addNode(newNode);
         }
+        return max;
     }
 
     /**
      * Increases the frequency of an existing keyword in the fibonacci heap.
      * @param keyword the keyword for which the frequency is to be increased
      * @param frequency the amount by which to increase the frequency of the existing keyword
+     * @return the max node of the fibonacci heap
      */
     @Override
-    public void increaseKey(String keyword, int frequency) {
+    public Node increaseKey(String keyword, int frequency) {
         Node node = hashTable.get(keyword);
 
         // check if node exists
         if(node == null) {
-            insert(keyword, frequency);
-            return;
+            return insert(keyword, frequency);
         }
 
         // update count of node
@@ -84,6 +81,16 @@ public class FibonacciHeapImpl implements FibonacciHeap{
                 removeAndReinsertNode(node);
             }
         }
+        return max;
+    }
+
+    /**
+     * Returns the keyword with the maximum frequency in the fibonacci heap
+     * @return the max node of the fibonacci heap
+     */
+    @Override
+    public Node getMax() {
+        return max;
     }
 
     /**

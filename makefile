@@ -9,11 +9,11 @@ CLASSES = \
         src/fibheap/FibonacciHeap.java \
         src/fibheap/FibonacciHeapImpl.java \
         src/fibheap/Test.java \
-        src/KeywordCounter.java
+        src/fibheap.KeywordCounter.java
 
 default: classes
 	@echo Finished compiling
-	@echo Run using - "java KeywordCounter <input_file>"
+	@echo Run using - "java fibheap.KeywordCounter <input_file>"
 
 classes: $(CLASSES:.java=.class)
 
