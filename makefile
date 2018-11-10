@@ -8,7 +8,6 @@ CLASSES = \
         src/fibheap/Node.java \
         src/fibheap/FibonacciHeap.java \
         src/fibheap/FibonacciHeapImpl.java \
-        src/fibheap/Test.java \
         src/fibheap.KeywordCounter.java
 
 default: classes

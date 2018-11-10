@@ -136,7 +136,7 @@ public class FibonacciHeapImpl implements FibonacciHeap{
         }
         // remove the old max node from the fibonacci heap
         removeNode(temp, true);
-        // perform a meld operation every time removeMax is called
+        // perform a meld operation every time removeMax() is called
         meld();
         return temp;
     }
