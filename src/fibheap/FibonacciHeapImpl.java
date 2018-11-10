@@ -7,7 +7,7 @@ public class FibonacciHeapImpl implements FibonacciHeap{
     // The node that contains the max key
     private Node max;
     // Hash table with key -> keyword and value -> node of the keyword
-    private HashMap<String, Node> hashTable = new HashMap<String, Node>();
+    private HashMap<String, Node> hashTable;
 
     // test function
     public void getMax() {
@@ -19,7 +19,9 @@ public class FibonacciHeapImpl implements FibonacciHeap{
         this.hashTable = hashTable;
     }
 
-     public FibonacciHeapImpl() {}
+    public FibonacciHeapImpl(HashMap<String, Node> hashTable) {
+        this.hashTable = hashTable;
+    }
 
     // test function
     public void print() {
@@ -44,7 +46,7 @@ public class FibonacciHeapImpl implements FibonacciHeap{
         // check if the keyword already exists
         if (hashTable.containsKey(keyword)) {
             // increase the count of an already existing keyword
-            increaseKey(hashTable.get(keyword), frequency);
+            increaseKey(keyword, frequency);
         } else {
             // Create new node
             Node newNode =  new Node(keyword, frequency);
@@ -55,11 +57,19 @@ public class FibonacciHeapImpl implements FibonacciHeap{
 
     /**
      * Increases the frequency of an existing keyword in the fibonacci heap.
-     * @param node the corresponding node of the existing keyword
+     * @param keyword the keyword for which the frequency is to be increased
      * @param frequency the amount by which to increase the frequency of the existing keyword
      */
     @Override
-    public void increaseKey(Node node, int frequency) {
+    public void increaseKey(String keyword, int frequency) {
+        Node node = hashTable.get(keyword);
+
+        // check if node exists
+        if(node == null) {
+            insert(keyword, frequency);
+            return;
+        }
+
         // update count of node
         node.setCount(node.getCount() + frequency);
         // if the node is a root node compare it with with max
@@ -135,9 +145,9 @@ public class FibonacciHeapImpl implements FibonacciHeap{
             return;
 
         // if there is only one subtree in the heap, no need to meld
-        // possibly not needed
         if(max.getRightSibling() == max && max.getLeftSibling() == max)
             return;
+
         Node i = max;
         System.out.println("Melding...");
         do {

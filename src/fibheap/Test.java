@@ -36,7 +36,7 @@ public class Test {
 
         FibonacciHeap fibHeap = new FibonacciHeapImpl(max, hashTable);
         fibHeap.print();
-        fibHeap.increaseKey(g, 500);
+        fibHeap.increaseKey("g", 500);
         fibHeap.print();
     }
 

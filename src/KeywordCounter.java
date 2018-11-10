@@ -4,6 +4,7 @@ import fibheap.Node;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class KeywordCounter {
@@ -17,8 +18,11 @@ public class KeywordCounter {
         // List of input strings to be processed
         List<String> inputs = readInputFile(inputFileName);
 
+        // Hash table to store keywords and nodes
+        HashMap<String, Node> hashTable = new HashMap<String, Node>();
+
         // Fibonacci Heap
-        FibonacciHeap fibHeap = new FibonacciHeapImpl();
+        FibonacciHeap fibHeap = new FibonacciHeapImpl(hashTable);
 
         // Output file name
         String outputFile = "output_file.txt";
@@ -38,8 +42,14 @@ public class KeywordCounter {
                     String keyword = k[0];
                     int frequency = Integer.parseInt(k[1]);
 
-                    // insert keyword and frequency into the fibonacci heap
-                    fibHeap.insert(keyword, frequency);
+                    // check if the keyword already exists
+                    if (hashTable.containsKey(keyword)) {
+                        // increase the count of an already existing keyword
+                        fibHeap.increaseKey(keyword, frequency);
+                    } else {
+                        // insert keyword and frequency into the fibonacci heap
+                        fibHeap.insert(keyword, frequency);
+                    }
                 } else {
                     List<Node> nodes = new ArrayList<Node>();
                     int n = Integer.parseInt(input);
