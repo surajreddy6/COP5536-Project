@@ -19,6 +19,8 @@ public class FibonacciHeapImpl implements FibonacciHeap{
         this.hashTable = hashTable;
     }
 
+     public FibonacciHeapImpl() {}
+
     // test function
     public void print() {
         System.out.println("*****************************************************");
@@ -108,7 +110,7 @@ public class FibonacciHeapImpl implements FibonacciHeap{
             Node i = maxChild;
             do {
                 Node k = i.getRightSibling();
-                removeNode(i);
+                removeNode(i, true);
                 addNode(i);
                 i = k;
             } while(i != maxChild);
@@ -116,7 +118,7 @@ public class FibonacciHeapImpl implements FibonacciHeap{
             max = getSecondMax();
         }
         // remove the old max node from the fib heap
-        removeNode(temp);
+        removeNode(temp, true);
         // perform a meld operation every time removeMax is called
         meld();
         return temp;
@@ -195,9 +197,7 @@ public class FibonacciHeapImpl implements FibonacciHeap{
         Node parentChild = parent.getChild();
         // remove the child (and it's subtree) from the heap first
         System.out.println("Removing " + child.getKeyword() + " from heap");
-        removeNode(child);
-        // add back only the reference to the child node
-        hashTable.put(child.getKeyword(), child);
+        removeNode(child, false);
         // check if parent has children
         if (parentChild == null) {
             parent.setChild(child);
@@ -286,13 +286,13 @@ public class FibonacciHeapImpl implements FibonacciHeap{
         head.setRightSibling(node);
     }
 
-    // TODO: use a flag to select if the entry from hashTable should also be deleted
     /**
      * Removes a node (and it's subtree) from the fibonacci heap. Note that this function
      * removes the entire subtree and not an individual node.
      * @param node the root of the subtree to be removed from the fibonacci heap
+     * @param removeHashTableEntry specifies whether to remove the node's entry from the hash table
      */
-    private void removeNode(Node node) {
+    private void removeNode(Node node, boolean removeHashTableEntry) {
         System.out.println("Removing node " + node.getKeyword());
         // parent of the node
         Node parent = node.getParent();
@@ -319,7 +319,9 @@ public class FibonacciHeapImpl implements FibonacciHeap{
         node.setRightSibling(node);
         node.setChildCut(false);
         // remove pointer to the node in the hash table
-        hashTable.remove(node.getKeyword());
+        if(removeHashTableEntry) {
+            hashTable.remove(node.getKeyword());
+        }
     }
 
     /**
@@ -331,7 +333,7 @@ public class FibonacciHeapImpl implements FibonacciHeap{
         // parent of the node
         Node parent = node.getParent();
         // remove the node (and its's subtree) from the heap
-        removeNode(node);
+        removeNode(node, true);
         // re-insert node (and its's subtree) into the heap
         addNode(node);
         // perform cascading cut only if the node's parent is not a root
