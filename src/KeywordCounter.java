@@ -9,10 +9,6 @@ import java.util.List;
 
 public class KeywordCounter {
 
-//    public static void main(String[] args) {
-//        Test.test2();
-//    }
-
     public static void main(String[] args) {
         String inputFileName = args[0];
         // List of input strings to be processed
@@ -56,7 +52,6 @@ public class KeywordCounter {
                     int n = Integer.parseInt(input);
 
                     for (int i = 0; i < n; i++) {
-                        System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
                         // remove max node from the fibonacci heap
                         Node node = fibHeap.removeMax();
 
@@ -71,9 +66,6 @@ public class KeywordCounter {
                             bufferedWriter.write(node.getKeyword());
 
                         nodes.add(node);
-                        System.out.println("+++++++++++++++++++++" + "Keyword: " + node.getKeyword() + " Count: " + node.getFrequency());
-                        fibHeap.print();
-                        System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
                     }
 
                     // re-insert the removed nodes into the fibonacci heap
@@ -84,7 +76,6 @@ public class KeywordCounter {
                     bufferedWriter.newLine();
                 }
             }
-            fibHeap.print();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
