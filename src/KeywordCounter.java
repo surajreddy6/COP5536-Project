@@ -71,14 +71,14 @@ public class KeywordCounter {
                             bufferedWriter.write(node.getKeyword());
 
                         nodes.add(node);
-                        System.out.println("+++++++++++++++++++++" + "Keyword: " + node.getKeyword() + " Count: " + node.getCount());
+                        System.out.println("+++++++++++++++++++++" + "Keyword: " + node.getKeyword() + " Count: " + node.getFrequency());
                         fibHeap.print();
                         System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
                     }
 
                     // re-insert the removed nodes into the fibonacci heap
                     for (Node node : nodes) {
-                        fibHeap.insert(node.getKeyword(), node.getCount());
+                        fibHeap.insert(node.getKeyword(), node.getFrequency());
                     }
 
                     bufferedWriter.newLine();

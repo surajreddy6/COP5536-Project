@@ -3,9 +3,9 @@ package fibheap;
 public class Node {
     // Degree of the node
     private int degree;
-    // Data fields of the node: keyword and count
+    // Data fields of the node: keyword and frequency
     private String keyword;
-    private int count;
+    private int frequency;
     // Child of the node
     private Node child;
     // Left sibling of the node
@@ -19,15 +19,15 @@ public class Node {
 
     public Node(){}
 
-    public Node(String keyword, int count) {
+    public Node(String keyword, int frequency) {
         this.keyword = keyword;
-        this.count = count;
+        this.frequency = frequency;
     }
 
-    public Node(int degree, String keyword, int count, Node child, Node leftSibling, Node rightSibling, Node parent, boolean childCut) {
+    public Node(int degree, String keyword, int frequency, Node child, Node leftSibling, Node rightSibling, Node parent, boolean childCut) {
         this.degree = degree;
         this.keyword = keyword;
-        this.count = count;
+        this.frequency = frequency;
         this.child = child;
         this.leftSibling = leftSibling;
         this.rightSibling = rightSibling;
@@ -43,12 +43,12 @@ public class Node {
         this.degree = degree;
     }
 
-    public int getCount() {
-        return count;
+    public int getFrequency() {
+        return frequency;
     }
 
-    public void setCount(int count) {
-        this.count = count;
+    public void setFrequency(int frequency) {
+        this.frequency = frequency;
     }
 
     public Node getChild() {
@@ -121,7 +121,7 @@ public class Node {
         return "Node{" + '\n' +
                 "degree=" + degree + '\n' +
                 ", keyword='" + keyword + '\'' + '\n' +
-                ", count=" + count + '\n' +
+                ", frequency=" + frequency + '\n' +
                 ", child=" + childKeyword + '\n' +
                 ", leftSibling=" + leftSiblingKeyword + '\n' +
                 ", rightSibling=" + rightSiblingKeyword + '\n' +

@@ -68,16 +68,16 @@ public class FibonacciHeapImpl implements FibonacciHeap{
         }
 
         // update count of node
-        node.setCount(node.getCount() + frequency);
+        node.setFrequency(node.getFrequency() + frequency);
         // if the node is a root node compare it with with max
         if(node.getParent() == null) {
-            if(node.getCount() > max.getCount()) {
+            if(node.getFrequency() > max.getFrequency()) {
                 max = node;
             }
         } else {
             // if count of node becomes greater than the parent remove the
             // node (and it's subtree) and re-insert into the heap
-            if(node.getCount() > node.getParent().getCount()) {
+            if(node.getFrequency() > node.getParent().getFrequency()) {
                 removeAndReinsertNode(node);
             }
         }
@@ -194,7 +194,7 @@ public class FibonacciHeapImpl implements FibonacciHeap{
             newTree = makeChild(b, a);
         else
             // make the node with smaller count as the subtree of the other
-            newTree = a.getCount() > b.getCount() ?  makeChild(a, b) : makeChild(b, a);
+            newTree = a.getFrequency() > b.getFrequency() ?  makeChild(a, b) : makeChild(b, a);
 
         Node existingTree = null;
         // check if there is an existing tree with the same degree as newTree
@@ -259,7 +259,7 @@ public class FibonacciHeapImpl implements FibonacciHeap{
             i = max.getRightSibling();
             secondMax = max.getRightSibling();
             while (i != max) {
-                if(i.getCount() > secondMax.getCount())
+                if(i.getFrequency() > secondMax.getFrequency())
                     secondMax = i;
                 i = i.getRightSibling();
             }
@@ -286,7 +286,7 @@ public class FibonacciHeapImpl implements FibonacciHeap{
             // childCut is not defined for the root but set it to false
             node.setChildCut(false);
             // if the incoming node's count is greater set it as max
-            if(node.getCount() > max.getCount()) {
+            if(node.getFrequency() > max.getFrequency()) {
                 max = node;
             }
         }
