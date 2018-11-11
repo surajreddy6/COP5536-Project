@@ -121,8 +121,6 @@ public class FibonacciHeapImpl implements FibonacciHeap{
             }
         } else {
             Node maxChild = max.getChild();
-            System.out.println("New max is");
-            System.out.println(max.toString());
             // remove children of max and re-insert them into the heap
             Node i = maxChild;
             do {
@@ -133,6 +131,8 @@ public class FibonacciHeapImpl implements FibonacciHeap{
             } while(i != maxChild);
             // call getSecondMax() only after adding the subtrees of max at the top level of the heap
             max = getSecondMax();
+            System.out.println("New max is");
+            System.out.println(max.toString());
         }
         // remove the old max node from the fibonacci heap
         removeNode(temp, true);
@@ -186,8 +186,15 @@ public class FibonacciHeapImpl implements FibonacciHeap{
     private void combineTrees(HashMap<Integer, Node> degreeTable, Node a, Node b) {
         System.out.println("Combining trees with keywords: " + a.getKeyword() + " and " + b.getKeyword());
         Node newTree;
-        // make the node with smaller count as the subtree of the other
-        newTree = a.getCount() > b.getCount() ?  makeChild(a, b) : makeChild(b, a);
+
+        // check if either a, b is the max node
+        if(a == max)
+            newTree = makeChild(a, b);
+        else if(b == max)
+            newTree = makeChild(b, a);
+        else
+            // make the node with smaller count as the subtree of the other
+            newTree = a.getCount() > b.getCount() ?  makeChild(a, b) : makeChild(b, a);
 
         Node existingTree = null;
         // check if there is an existing tree with the same degree as newTree
