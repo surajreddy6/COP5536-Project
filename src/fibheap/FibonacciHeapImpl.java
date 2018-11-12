@@ -100,12 +100,15 @@ public class FibonacciHeapImpl implements FibonacciHeap{
                 max = getSecondMax();
             }
         } else {
+            Node maxChild = max.getChild();
             // remove children of max and re-insert them into the heap
-            while(max.getChild() != null) {
-                Node i = max.getChild();
+            Node i = maxChild;
+            do {
+                Node k = i.getRightSibling();
                 removeNode(i, true);
                 addNode(i);
-            }
+                i = k;
+            } while(i != maxChild);
             // call getSecondMax() only after adding the subtrees of max at the top level of the heap
             max = getSecondMax();
         }
