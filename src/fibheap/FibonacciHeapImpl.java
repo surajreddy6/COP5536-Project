@@ -25,7 +25,7 @@ public class FibonacciHeapImpl implements FibonacciHeap{
     public Node insert(String keyword, int frequency) {
         // check if the keyword already exists
         if (hashTable.containsKey(keyword)) {
-            // increase the count of an already existing keyword
+            // increase the frequency of an already existing keyword
             return increaseKey(keyword, frequency);
         } else {
             // Create new node
@@ -51,7 +51,7 @@ public class FibonacciHeapImpl implements FibonacciHeap{
             return insert(keyword, frequency);
         }
 
-        // update count of node
+        // update frequency of node
         node.setFrequency(node.getFrequency() + frequency);
         // if the node is a root node compare it with with max
         if(node.getParent() == null) {
@@ -59,7 +59,7 @@ public class FibonacciHeapImpl implements FibonacciHeap{
                 max = node;
             }
         } else {
-            // if count of node becomes greater than the parent remove the
+            // if frequency of node becomes greater than the parent remove the
             // node (and it's subtree) and re-insert into the heap
             if(node.getFrequency() > node.getParent().getFrequency()) {
                 removeAndReinsertNode(node);
@@ -166,7 +166,7 @@ public class FibonacciHeapImpl implements FibonacciHeap{
         else if(b == max)
             newTree = makeChild(b, a);
         else
-            // make the node with smaller count as the subtree of the other
+            // make the node with smaller frequency as the subtree of the other
             newTree = a.getFrequency() > b.getFrequency() ?  makeChild(a, b) : makeChild(b, a);
 
         Node existingTree = null;
@@ -254,7 +254,7 @@ public class FibonacciHeapImpl implements FibonacciHeap{
             insertIntoList(max, node);
             // childCut is not defined for the root but set it to false
             node.setChildCut(false);
-            // if the incoming node's count is greater set it as max
+            // if the incoming node's frequency is greater set it as max
             if(node.getFrequency() > max.getFrequency()) {
                 max = node;
             }
