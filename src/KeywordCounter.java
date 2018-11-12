@@ -1,6 +1,7 @@
 import fibheap.FibonacciHeap;
 import fibheap.FibonacciHeapImpl;
 import fibheap.Node;
+import fibheap.Test;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -10,7 +11,7 @@ import java.util.List;
 public class KeywordCounter {
 
 //    public static void main(String[] args) {
-//        Test.test2();
+//        Test.test1();
 //    }
 
     public static void main(String[] args) {
@@ -72,7 +73,7 @@ public class KeywordCounter {
 
                         nodes.add(node);
                         System.out.println("+++++++++++++++++++++" + "Keyword: " + node.getKeyword() + " Count: " + node.getFrequency());
-                        fibHeap.print();
+                        //fibHeap.print();
                         System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
                     }
 
@@ -84,7 +85,7 @@ public class KeywordCounter {
                     bufferedWriter.newLine();
                 }
             }
-            fibHeap.print();
+            //fibHeap.print();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
