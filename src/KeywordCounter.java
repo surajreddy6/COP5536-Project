@@ -56,14 +56,17 @@ public class KeywordCounter {
                         Node node = fibHeap.removeMax();
 
                         // check if there are no elements in the heap
-                        if(node == null)
+                        if (node == null) {
                             break;
+                        }
 
                         // write keyword to output file
-                        if(i != n-1)
+                        if (i != n-1) {
                             bufferedWriter.write(node.getKeyword() + ",");
-                        else
+                        }
+                        else {
                             bufferedWriter.write(node.getKeyword());
+                        }
 
                         nodes.add(node);
                     }
@@ -80,11 +83,13 @@ public class KeywordCounter {
             e.printStackTrace();
         } finally {
             try {
-                if(bufferedWriter != null)
+                if (bufferedWriter != null) {
                     bufferedWriter.close();
+                }
 
-                if(fileWriter != null)
+                if (fileWriter != null) {
                     fileWriter.close();
+                }
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -116,6 +121,7 @@ public class KeywordCounter {
                     reader.close();
                 }
             } catch (IOException e) {
+                e.printStackTrace();
             }
         }
         return lines;
