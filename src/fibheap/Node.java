@@ -89,23 +89,13 @@ public class Node {
     @Override
     public String toString() {
         String childKeyword, parentKeyword, leftSiblingKeyword, rightSiblingKeyword;
-        if(parent == null)
-            parentKeyword = "None";
-        else parentKeyword = parent.getKeyword();
 
-        if(child == null)
-            childKeyword = "None";
-        else childKeyword = child.getKeyword();
+        parentKeyword = parent == null ? "None" : parent.getKeyword();
+        childKeyword = child == null ? "None" : child.getKeyword();
+        leftSiblingKeyword = leftSibling == null ? "None" : leftSibling.getKeyword();
+        rightSiblingKeyword = rightSibling == null ? "None" : rightSibling.getKeyword();
 
-        if(leftSibling == null)
-            leftSiblingKeyword = "None";
-        else leftSiblingKeyword = leftSibling.getKeyword();
-
-        if(rightSibling == null)
-            rightSiblingKeyword = "None";
-        else rightSiblingKeyword = rightSibling.getKeyword();
-
-        return "Node{" + '\n' +
+        return "Node {" + '\n' +
                 "degree=" + degree + '\n' +
                 ", keyword='" + keyword + '\'' + '\n' +
                 ", frequency=" + frequency + '\n' +
