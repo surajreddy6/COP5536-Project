@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class FibonacciHeapImpl implements FibonacciHeap{
-
     // The node that contains the max key
     private Node max;
 
@@ -203,7 +202,9 @@ public class FibonacciHeapImpl implements FibonacciHeap{
      * @return the root of the parent tree
      */
     private Node makeChild(Node parent, Node child) {
+        // child of the parent
         Node parentChild = parent.getChild();
+
         // remove the child (and it's subtree) from the heap first
         removeNode(child, false);
 
@@ -251,7 +252,7 @@ public class FibonacciHeapImpl implements FibonacciHeap{
                 if (i.getFrequency() > secondMax.getFrequency()) {
                     secondMax = i;
                 }
-                
+
                 i = i.getRightSibling();
             }
         }
@@ -350,6 +351,7 @@ public class FibonacciHeapImpl implements FibonacciHeap{
     private void removeAndReinsertNode(Node node) {
         // parent of the node
         Node parent = node.getParent();
+
         // remove the node (and its's subtree) from the heap
         removeNode(node, true);
         // re-insert node (and its's subtree) into the heap
