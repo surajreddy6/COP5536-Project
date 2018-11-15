@@ -13,15 +13,13 @@ public class KeywordCounter {
         String inputFileName = args[0];
         // List of input strings to be processed
         List<String> inputs = readInputFile(inputFileName);
-
         // Hash table to store keywords and nodes
         HashMap<String, Node> hashTable = new HashMap<String, Node>();
-
         // Fibonacci Heap
         FibonacciHeap fibHeap = new FibonacciHeapImpl(hashTable);
-
         // Output file name
         String outputFile = "output_file.txt";
+
         FileWriter fileWriter = null;
         BufferedWriter bufferedWriter = null;
 
@@ -33,10 +31,10 @@ public class KeywordCounter {
             for (String input : inputs) {
                 // if input string starts with '$' process it else print the top n keywords
                 if (input.charAt(0) == '$') {
-
                     // split input into keyword and frequency
                     String[] k = input.replace("$", "").split("\\s");
                     String keyword = k[0];
+
                     int frequency = Integer.parseInt(k[1]);
 
                     // check if the keyword already exists
@@ -101,6 +99,7 @@ public class KeywordCounter {
         List<String> lines = new ArrayList<String>();
         File inputFile = new File(inputFileName);
         BufferedReader reader = null;
+
         try {
             reader = new BufferedReader(new FileReader(inputFile));
             String text = null;
@@ -124,6 +123,7 @@ public class KeywordCounter {
                 e.printStackTrace();
             }
         }
+
         return lines;
     }
 }
