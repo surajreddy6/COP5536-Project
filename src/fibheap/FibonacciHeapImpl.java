@@ -109,7 +109,6 @@ public class FibonacciHeapImpl implements FibonacciHeap{
                 removeNode(i, true);
                 addNode(i);
             }
-
             // call getSecondMax() only after adding the subtrees of max at the top level of the heap
             max = getSecondMax();
         }

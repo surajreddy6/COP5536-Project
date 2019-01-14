@@ -1,5 +1,7 @@
 package fibheap;
 
+import java.util.Objects;
+
 public class Node {
     // Degree of the node
     private int degree;
@@ -105,5 +107,18 @@ public class Node {
                 ", parent=" + parentKeyword + '\n' +
                 ", childCut=" + childCut + '\n' +
                 '}' + '\n';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Node node = (Node) o;
+        return Objects.equals(keyword, node.keyword);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(keyword);
     }
 }
